@@ -1,5 +1,5 @@
-from mmcv.runner import load_checkpoint as mmcv_load_checkpoint
-from mmcv.runner.checkpoint import load_url_dist
+from mmengine.runner import load_checkpoint as mmengine_load_checkpoint
+from mmengine.runner.checkpoint import load_from_http
 import urllib
 
 
@@ -16,7 +16,7 @@ mmskeleton_model_urls = {
 def load_checkpoint(model, filename, *args, **kwargs):
     try:
         filename = get_mmskeleton_url(filename)
-        return mmcv_load_checkpoint(model, filename, *args, **kwargs)
+        return mmengine_load_checkpoint(model, filename, *args, **kwargs)
     except (urllib.error.HTTPError, urllib.error.URLError) as e:
         raise Exception(url_error_message.format(filename)) from e
 
@@ -32,7 +32,7 @@ def get_mmskeleton_url(filename):
 def cache_checkpoint(filename):
     try:
         filename = get_mmskeleton_url(filename)
-        load_url_dist(get_mmskeleton_url(filename))
+        load_from_http(get_mmskeleton_url(filename))
     except (urllib.error.HTTPError, urllib.error.URLError) as e:
         raise Exception(url_error_message.format(filename)) from e
 
